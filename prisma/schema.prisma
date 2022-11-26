@@ -1,0 +1,63 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+    id    String  @id @default(auto()) @map("_id") @db.ObjectId
+    email String  @unique
+    password String
+    name  String
+    role    Role     @default(USER)
+    createdAt DateTime @default(now())
+    ranobes Ranobe[]
+    chapter Chapter[]
+}
+
+model Ranobe {
+    id    String  @id @default(auto()) @map("_id") @db.ObjectId
+    title     String
+    description   String?
+    categories Category[] @relation(fields: [categoryIDs], references: [id])
+    categoryIDs String[]   @db.ObjectId
+    published Boolean? @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    author    User    @relation(fields: [authorId], references: [id])
+    authorId  String @db.ObjectId
+    chapter Chapter[]
+}
+
+model Chapter{
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
+    volume Int @default(1)
+    number Int
+    title     String
+    text String
+    ranobe   Ranobe    @relation(fields: [ranobeId], references: [id])
+    ranobeId  String  @db.ObjectId
+    author    User    @relation(fields: [authorId], references: [id])
+    authorId  String @db.ObjectId
+}
+
+model Category {
+    id    String @id @default(auto()) @map("_id") @db.ObjectId
+    value String @unique
+    name  String @unique
+    ranobes Ranobe[]  @relation(fields: [ranobeIDs], references: [id])
+    ranobeIDs String[] @db.ObjectId
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+
