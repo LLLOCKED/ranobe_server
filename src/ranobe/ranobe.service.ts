@@ -1,11 +1,10 @@
-import { Injectable } from "@nestjs/common";
+import {Injectable, UploadedFile} from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Ranobe, Prisma } from "@prisma/client";
 
 @Injectable()
 export class RanobeService {
-  constructor(private prisma: PrismaService) {
-  }
+  constructor(private prisma: PrismaService) {}
 
   async ranobe(
     ranobeWhereUniqueInput: Prisma.RanobeWhereUniqueInput
@@ -23,6 +22,7 @@ export class RanobeService {
     orderBy?: Prisma.RanobeOrderByWithRelationInput;
   }): Promise<Ranobe[]> {
     const { skip, take, cursor, where, orderBy } = params;
+
     return this.prisma.ranobe.findMany({
       skip,
       take,
@@ -31,4 +31,12 @@ export class RanobeService {
       orderBy
     });
   }
+
+  async createRanobe(data: Prisma.RanobeCreateInput): Promise<Ranobe> {
+    return this.prisma.ranobe.create({
+      data,
+    });
+  }
 }
+
+

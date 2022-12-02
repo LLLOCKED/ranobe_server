@@ -14,7 +14,7 @@ model User {
     id    String  @id @default(auto()) @map("_id") @db.ObjectId
     email String  @unique
     password String
-    name  String
+    name  String @unique
     role    Role     @default(USER)
     createdAt DateTime @default(now())
     ranobes Ranobe[]
@@ -25,6 +25,7 @@ model Ranobe {
     id    String  @id @default(auto()) @map("_id") @db.ObjectId
     title     String
     description   String?
+    image String?
     categories Category[] @relation(fields: [categoryIDs], references: [id])
     categoryIDs String[]   @db.ObjectId
     published Boolean? @default(false)
