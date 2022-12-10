@@ -1,4 +1,4 @@
-import {Injectable, UploadedFile} from "@nestjs/common";
+import { Injectable, UploadedFile } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { Ranobe, Prisma } from "@prisma/client";
 
@@ -34,9 +34,13 @@ export class RanobeService {
 
   async createRanobe(data: Prisma.RanobeCreateInput): Promise<Ranobe> {
     return this.prisma.ranobe.create({
-      data,
+      data
     });
   }
+
+  async ranobesByUser(name: string): Promise<Ranobe[] | null> {
+    return this.prisma.user.findUnique({
+      where: { name: name }
+    }).ranobes({});
+  }
 }
-
-

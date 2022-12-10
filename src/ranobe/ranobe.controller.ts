@@ -33,6 +33,11 @@ export class RanobeController {
     return this.ranobeService.ranobe({ id: id });
   }
 
+  @Get("user/:name")
+  async  getRanobesByUser(@Param("name") name: string): Promise<RanobeModel[] | null>{
+    return this.ranobeService.ranobesByUser(name);
+  }
+
   @Get()
   async getRanobes(
     @Query("take") take: number,

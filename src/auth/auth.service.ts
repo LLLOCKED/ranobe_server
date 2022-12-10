@@ -1,11 +1,16 @@
-import {Injectable, NotFoundException, UnauthorizedException} from "@nestjs/common";
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException
+} from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
 import { UsersService } from "../users/users.service";
-import {JwtService} from "@nestjs/jwt";
-import {CreateUserDto} from "../users/dto/create-user.dto";
-import {AuthResponse} from "./dto/auth-response.dto";
-import {compare} from 'bcrypt';
-import {LoginUserDto} from "../users/dto/login-user.dto";
+import { JwtService } from "@nestjs/jwt";
+import { CreateUserDto } from "../users/dto/create-user.dto";
+import { AuthLoginResponse, AuthRegResponse } from "./dto/auth-response.dto";
+import { compare } from "bcrypt";
+import { LoginUserDto } from "../users/dto/login-user.dto";
+import { Response } from "express";
 
 @Injectable()
 export class AuthService {
@@ -15,36 +20,42 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async register(data: CreateUserDto): Promise<AuthResponse>{
+  async register(data: CreateUserDto): Promise<AuthRegResponse> {
     const user = await this.usersService.create(data);
+
     return {
-      token: this.jwtService.sign({email: user.email}),
-      user
-    }
+      message: "User registered"
+    };
   }
 
-  async login(data:LoginUserDto): Promise<AuthResponse> {
+  async login(
+    data: LoginUserDto,
+    response: Response
+  ): Promise<AuthLoginResponse> {
     const { email, password } = data;
 
     const user = await this.prismaService.user.findUnique({
       where: { email }
     });
 
-    if(!user) {
-      throw new NotFoundException('user not found');
+    if (!user) {
+      throw new NotFoundException("user not found");
     }
 
     const validatePassword = await compare(password, user.password);
 
     if (!validatePassword) {
-      throw new UnauthorizedException('invalid password');
+      throw new UnauthorizedException("invalid password");
     }
 
+    const token = this.jwtService.sign({ email });
+
+    response.cookie("token", token, { httpOnly: true, expires: new Date(Date.now() + 1800000) });
+    response.cookie("logged_in", true , { expires: new Date(Date.now() + 1800000)});
+
     return {
-      token: this.jwtService.sign({
-        email
-      }),
-      user
-    }
+      token: token,
+      message: "User logined"
+    };
   }
 }

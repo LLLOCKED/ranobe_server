@@ -1,6 +1,10 @@
 import { User } from ".prisma/client";
 
-export class AuthResponse {
+export class AuthRegResponse {
+  message: string;
+}
+
+export class AuthLoginResponse {
   token: string;
-  user: User;
+  message: string;
 }
