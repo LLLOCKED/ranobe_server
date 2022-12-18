@@ -1,4 +1,5 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException
@@ -8,7 +9,7 @@ import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
 import { CreateUserDto } from "../users/dto/create-user.dto";
 import { AuthLoginResponse, AuthRegResponse } from "./dto/auth-response.dto";
-import { compare } from "bcrypt";
+import {compare, hashSync} from "bcrypt";
 import { LoginUserDto } from "../users/dto/login-user.dto";
 import { Response } from "express";
 
@@ -21,7 +22,25 @@ export class AuthService {
   ) {}
 
   async register(data: CreateUserDto): Promise<AuthRegResponse> {
-    const user = await this.usersService.create(data);
+    const { email, password, name } = data;
+
+    const isUser = await this.prismaService.user.findUnique({
+      where: { email }
+    });
+
+    if (isUser) {
+      throw new ConflictException("user exist");
+    }
+
+    const hash = hashSync(password, 10);
+
+
+    const user = await this.prismaService.user.create({
+      // @ts-ignore
+      data: {
+        email: email, name: name, password: hash
+      }
+    });
 
     return {
       message: "User registered"

@@ -19,7 +19,7 @@ export class UsersService {
     name: string;
     email: string;
     createdAt: Date;
-    role: "USER" | "ADMIN";
+    role: string;
   }> {
     const user = await this.prisma.user.findUnique({
       where:  userWhereUniqueInput,
@@ -38,25 +38,15 @@ export class UsersService {
     return user;
   }
 
-  async create(data: CreateUserDto): Promise<User> {
-    const { email, password, name } = data;
 
-    const isUser = await this.prisma.user.findUnique({
+  async deleteUser(userReq: any):Promise<{message: string}>{
+
+    const deleteUser = await this.prisma.user.delete({
       where: {
-        email: email
+        email: userReq.email
       }
     });
 
-    if (isUser) {
-      throw new HttpException("user_already_exist", HttpStatus.CONFLICT);
-    }
-    const hashPass = await hash(password, 10);
-    return this.prisma.user.create({
-      data: {
-        email,
-        name,
-        password: hashPass
-      }
-    });
+    return {message: "User deleted"}
   }
 }

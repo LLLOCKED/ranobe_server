@@ -4,13 +4,20 @@ import { Ranobe, Prisma } from "@prisma/client";
 
 @Injectable()
 export class RanobeService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService) { }
 
   async ranobe(
     ranobeWhereUniqueInput: Prisma.RanobeWhereUniqueInput
   ): Promise<Ranobe | null> {
     return this.prisma.ranobe.findUnique({
-      where: ranobeWhereUniqueInput
+      where: ranobeWhereUniqueInput,
+      include: {
+        categories: {
+          select: {
+            name: true
+          }
+        }
+      }
     });
   }
 
@@ -32,15 +39,22 @@ export class RanobeService {
     });
   }
 
-  async createRanobe(data: Prisma.RanobeCreateInput): Promise<Ranobe> {
-    return this.prisma.ranobe.create({
+  async createRanobe(
+    data: Prisma.RanobeCreateInput
+  ): Promise<{ message: string }> {
+    await this.prisma.ranobe.create({
       data
     });
+
+    return { message: "Ranobe add" };
   }
 
   async ranobesByUser(name: string): Promise<Ranobe[] | null> {
-    return this.prisma.user.findUnique({
-      where: { name: name }
-    }).ranobes({});
+    return this.prisma.user
+      .findUnique({
+        where: { name: name }
+        // @ts-ignore
+      })
+      .ranobes({});
   }
 }
