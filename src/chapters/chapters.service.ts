@@ -35,10 +35,9 @@ export class ChaptersService {
     return this.prisma.chapter.create({
       data
     });
-  }
+  } 
 
   deleteChapter(id: string): Promise<ChapterModel> {
-    Logger.log("chap " + id)
     return this.prisma.chapter.delete({
       where: { id: id },
     });

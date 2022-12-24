@@ -70,4 +70,21 @@ export class RanobeService {
       })
       .ranobes({});
   }
+
+  updateRanobe(params: {
+    where: Prisma.ChapterWhereUniqueInput;
+    data: Prisma.ChapterUpdateInput;
+  }): Promise<Ranobe> {
+    const { data, where } = params;
+    return this.prisma.ranobe.update({
+      data,
+      where
+    });
+  }
+
+  deleteRanobe(id: string): Promise<Ranobe> {
+    return this.prisma.ranobe.delete({
+      where: { id: id },
+    });
+  }
 }
