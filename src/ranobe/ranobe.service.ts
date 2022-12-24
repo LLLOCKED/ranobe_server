@@ -4,7 +4,7 @@ import { Ranobe, Prisma } from "@prisma/client";
 
 @Injectable()
 export class RanobeService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private prisma: PrismaService) {}
 
   async ranobe(
     ranobeWhereUniqueInput: Prisma.RanobeWhereUniqueInput
@@ -12,6 +12,19 @@ export class RanobeService {
     return this.prisma.ranobe.findUnique({
       where: ranobeWhereUniqueInput,
       include: {
+        chapter: {
+          select: {
+            id: true,
+            title: true,
+            volume: true,
+            number: true,
+            author: {
+              select: {
+                name: true
+              }
+            }
+          }
+        },
         categories: {
           select: {
             name: true

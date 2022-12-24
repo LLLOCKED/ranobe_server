@@ -22,8 +22,8 @@ model Ranobe {
   id          String     @id @default(auto()) @map("_id") @db.ObjectId
   title       String
   description String?
-  status      Status     @default(ONGOING)
-  tStatus     Status     @default(ONGOING)
+  status      Status?     @default(ONGOING)
+  tStatus     Status?     @default(ONGOING)
   image       String?
   categories  Category[] @relation(fields: [categoryIDs], references: [id])
   categoryIDs String[]   @db.ObjectId
@@ -41,6 +41,7 @@ model Chapter {
   number   Int
   title    String
   text     String
+  published   Boolean?   @default(false)
   ranobe   Ranobe @relation(fields: [ranobeId], references: [id])
   ranobeId String @db.ObjectId
   author   User   @relation(fields: [authorId], references: [id])

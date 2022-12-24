@@ -4,11 +4,14 @@ import { PrismaModule } from "./prisma/prisma.module";
 import { UsersModule } from "./users/users.module";
 import { AuthModule } from './auth/auth.module';
 import {ConfigModule} from "@nestjs/config";
+import { ChaptersModule } from './chapters/chapters.module';
+
 
 
 @Module({
-  imports: [RanobeModule, PrismaModule, UsersModule, AuthModule, ConfigModule.forRoot() ],
+  imports: [RanobeModule, PrismaModule, UsersModule, AuthModule, ChaptersModule, ConfigModule.forRoot(), ChaptersModule ],
   controllers: [],
-  providers: []
+  providers: [
+  ]
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import {Controller, Delete, Get, Param, UseGuards} from "@nestjs/common";
 import { UsersService } from "./users.service";
 import {AuthGuard} from "@nestjs/passport";
-import AuthUser from "../common/decorators/auth-user.decorator";
+import AuthUser from "../auth/decorators/auth-user.decorator";
 import {User} from "@prisma/client";
 
 @Controller("users")
@@ -11,7 +11,6 @@ export class UsersController {
   @Get(":id")
   async getOneUser(@Param("id") id: string): Promise<{
     name: string;
-    email: string;
     createdAt: Date;
     role: string;
   }> {

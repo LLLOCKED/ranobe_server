@@ -1,5 +1,3 @@
-import { User } from ".prisma/client";
-
 export class AuthRegResponse {
   message: string;
 }

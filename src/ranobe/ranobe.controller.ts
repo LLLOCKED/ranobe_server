@@ -1,5 +1,5 @@
 import {
-    Body,
+    Body, 
     Controller,
     FileTypeValidator,
     Get,
@@ -22,7 +22,7 @@ import path = require("path");
 import { of } from "rxjs";
 import { AuthGuard } from "@nestjs/passport";
 import { CreateRanobeDto } from "./dto/create-ranobe.dto";
-import AuthUser from "../common/decorators/auth-user.decorator";
+import AuthUser from "../auth/decorators/auth-user.decorator";
 
 @Controller("ranobes")
 export class RanobeController {

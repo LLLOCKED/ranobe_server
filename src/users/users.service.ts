@@ -7,7 +7,7 @@ import {
 import { PrismaService } from "../prisma/prisma.service";
 import { User, Prisma } from "@prisma/client";
 import { hash } from "bcrypt";
-import { CreateUserDto } from "./dto/create-user.dto";
+import { CreateUserDto } from "../auth/dto/create-user.dto";
 
 @Injectable()
 export class UsersService {
@@ -17,7 +17,6 @@ export class UsersService {
       userWhereUniqueInput: Prisma.UserWhereUniqueInput
   ): Promise<{
     name: string;
-    email: string;
     createdAt: Date;
     role: string;
   }> {
@@ -25,7 +24,6 @@ export class UsersService {
       where:  userWhereUniqueInput,
       select: {
         name: true,
-        email: true,
         createdAt: true,
         role: true
       }

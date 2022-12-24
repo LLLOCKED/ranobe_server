@@ -7,10 +7,10 @@ import {
 import { PrismaService } from "../prisma/prisma.service";
 import { UsersService } from "../users/users.service";
 import { JwtService } from "@nestjs/jwt";
-import { CreateUserDto } from "../users/dto/create-user.dto";
+import { CreateUserDto } from "./dto/create-user.dto";
 import { AuthLoginResponse, AuthRegResponse } from "./dto/auth-response.dto";
 import {compare, hashSync} from "bcrypt";
-import { LoginUserDto } from "../users/dto/login-user.dto";
+import { LoginUserDto } from "./dto/login-user.dto";
 import { Response } from "express";
 
 @Injectable()
