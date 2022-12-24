@@ -45,7 +45,7 @@ export class ChaptersController {
   }
 
   @Roles('USER')
-  @UseGuards(AuthGuard("jwt"), RolesGuard)
+  @UseGuards(AuthGuard("jwt"), RolesGuard, UserIsAuthorGuard)
   @Put('publish/:id')
   async publishChapter(@Param('id') id: string): Promise<ChapterModel> {
     return this.chaptersService.updateChapter({
