@@ -10,24 +10,35 @@ export class ChaptersService {
     chapterWhereUniqueInput: Prisma.ChapterWhereUniqueInput
   ): Promise<ChapterModel | null> {
     return this.prisma.chapter.findUnique({
-      where: chapterWhereUniqueInput
+      where: chapterWhereUniqueInput,
     });
   }
 
+
+  // TODO - type promis
   chapters(params: {
     skip?: number;
     take?: number;
     cursor?: Prisma.ChapterWhereUniqueInput;
     where?: Prisma.ChapterWhereInput;
     orderBy?: Prisma.ChapterOrderByWithRelationInput;
-  }): Promise<ChapterModel[]> {
+  }): Promise<any> {
     const { skip, take, cursor, where, orderBy } = params;
     return this.prisma.chapter.findMany({
       skip,
       take,
       cursor,
       where,
-      orderBy
+      orderBy,
+      select:{
+        id: true,
+        title: true,
+        volume: true,
+        number: true,
+        createdAt: true,
+        ranobeId: true,
+        authorId: true,
+      }
     });
   }
 

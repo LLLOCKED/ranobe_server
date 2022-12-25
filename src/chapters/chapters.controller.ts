@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards
+} from "@nestjs/common";
 import { ChaptersService } from "./chapters.service";
 import { Chapter as ChapterModel, User } from "@prisma/client";
 import { CreateChapterDto } from "./dto/create-chapter.dto";
@@ -24,10 +33,12 @@ export class ChaptersController {
 
   @Get("ranobe/:id")
   async getChaptersByRanobe(@Param("id") id: string): Promise<ChapterModel[]> {
-    return this.chaptersService.chapters({ where: { published: false, ranobeId: id } });
+    return this.chaptersService.chapters({
+      where: { published: false, ranobeId: id }
+    });
   }
 
-  @Post("create")
+  @Post()
   @UseGuards(AuthGuard("jwt"))
   async createChapter(
     @AuthUser() user: User,
@@ -39,24 +50,24 @@ export class ChaptersController {
       volume,
       number,
       text,
-      author: {connect: {id: user.id}},
-      ranobe: {connect: {id: ranobe}}
+      author: { connect: { id: user.id } },
+      ranobe: { connect: { id: ranobe } }
     });
   }
 
-  @Roles('USER')
+  @Roles("USER")
   @UseGuards(AuthGuard("jwt"), RolesGuard, UserIsAuthorGuard)
-  @Put('publish/:id')
-  async publishChapter(@Param('id') id: string): Promise<ChapterModel> {
+  @Put("publish/:id")
+  async publishChapter(@Param("id") id: string): Promise<ChapterModel> {
     return this.chaptersService.updateChapter({
       where: { id: id },
-      data: { published: true },
+      data: { published: true }
     });
   }
 
   @UseGuards(AuthGuard("jwt"), UserIsAuthorGuard)
   @Delete(":id")
-  async deleteChapter(@Param("id") id: string):Promise<ChapterModel>{
+  async deleteChapter(@Param("id") id: string): Promise<ChapterModel> {
     return this.chaptersService.deleteChapter(id);
   }
 }

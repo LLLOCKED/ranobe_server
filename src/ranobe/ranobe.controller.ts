@@ -25,8 +25,6 @@ import { of } from "rxjs";
 import { AuthGuard } from "@nestjs/passport";
 import { CreateRanobeDto } from "./dto/create-ranobe.dto";
 import AuthUser from "../auth/decorators/auth-user.decorator";
-import { Roles } from "src/auth/decorators/roles.decorator";
-import { RolesGuard } from "src/auth/guards/roles.guard";
 import { UserIsAuthorGuard } from "src/chapters/guards/user-is-author.guard";
 
 @Controller("ranobes")
@@ -81,7 +79,7 @@ export class RanobeController {
     });
   }
 
-  @Post("create")
+  @Post()
   @UseGuards(AuthGuard("jwt"))
   async createRanobeByUser(
     @AuthUser() user: User,

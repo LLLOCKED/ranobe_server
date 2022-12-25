@@ -42,6 +42,7 @@ model Chapter {
   title    String
   text     String
   published   Boolean?   @default(false)
+  createdAt   DateTime   @default(now())
   ranobe   Ranobe @relation(fields: [ranobeId], references: [id])
   ranobeId String @db.ObjectId
   author   User   @relation(fields: [authorId], references: [id])
