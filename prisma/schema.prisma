@@ -32,7 +32,7 @@ model Ranobe {
   updatedAt   DateTime   @updatedAt
   author      User       @relation(fields: [authorId], references: [id])
   authorId    String     @db.ObjectId
-  chapter     Chapter[]
+  chapter     Chapter[] 
 }
 
 model Chapter {
@@ -43,7 +43,7 @@ model Chapter {
   text     String
   published   Boolean?   @default(false)
   createdAt   DateTime   @default(now())
-  ranobe   Ranobe @relation(fields: [ranobeId], references: [id])
+  ranobe   Ranobe @relation(fields: [ranobeId], references: [id], onDelete: Cascade)
   ranobeId String @db.ObjectId
   author   User   @relation(fields: [authorId], references: [id])
   authorId String @db.ObjectId
