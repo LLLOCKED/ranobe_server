@@ -16,6 +16,7 @@ import AuthUser from "src/auth/decorators/auth-user.decorator";
 import { RolesGuard } from "src/auth/guards/roles.guard";
 import { Roles } from "src/auth/decorators/roles.decorator";
 import { UserIsAuthorGuard } from "./guards/user-is-author.guard";
+import { UpdateChapterDto } from "./dto/update-chapter.dto";
 
 @Controller("chapters")
 export class ChaptersController {
@@ -29,6 +30,12 @@ export class ChaptersController {
   @Get("")
   async getChapters(): Promise<ChapterModel[]> {
     return this.chaptersService.chapters({ where: { published: true } });
+  }
+
+  @Get("my/list")
+  @UseGuards(AuthGuard("jwt"), UserIsAuthorGuard)
+  async getChaptersByUser(@AuthUser() user: User): Promise<ChapterModel[]> {
+    return this.chaptersService.chapters({ where: { authorId: user.id } });
   }
 
   @Get("ranobe/:id")
@@ -55,7 +62,7 @@ export class ChaptersController {
     });
   }
 
-  @Roles("USER")
+  @Roles("ADMIN")
   @UseGuards(AuthGuard("jwt"), RolesGuard, UserIsAuthorGuard)
   @Put("publish/:id")
   async publishChapter(@Param("id") id: string): Promise<ChapterModel> {
@@ -63,6 +70,15 @@ export class ChaptersController {
       where: { id: id },
       data: { published: true }
     });
+  }
+
+  @Put(":id")
+  @UseGuards(AuthGuard("jwt"), UserIsAuthorGuard)
+  async uptatedChapter(@Param("id") id: string, @Body() data: UpdateChapterDto): Promise<ChapterModel>{
+      return this.chaptersService.updateChapter({
+        data: {title: data.title, volume: data.volume, number: data.number},
+        where: {id: id}
+      })
   }
 
   @UseGuards(AuthGuard("jwt"), UserIsAuthorGuard)

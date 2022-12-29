@@ -72,8 +72,8 @@ export class RanobeService {
   }
 
   updateRanobe(params: {
-    where: Prisma.ChapterWhereUniqueInput;
-    data: Prisma.ChapterUpdateInput;
+    where: Prisma.RanobeWhereUniqueInput;
+    data: Prisma.RanobeUpdateInput;
   }): Promise<Ranobe> {
     const { data, where } = params;
     return this.prisma.ranobe.update({
