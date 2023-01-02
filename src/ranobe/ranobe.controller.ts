@@ -71,16 +71,18 @@ export class RanobeController {
     @Query("take") take: number,
     @Query("skip") skip: number,
     @Query("orderByUpdated") orderByUpdated: Prisma.SortOrder | undefined,
-    @Query("orderByCreated") orderByCreated: Prisma.SortOrder | undefined
+    @Query("orderByCreated") orderByCreated: Prisma.SortOrder | undefined,
+    @Query("orderByViews") orderByViews: Prisma.SortOrder | undefined
   ): Promise<RanobeModel[]> {
     const created = orderByCreated ? { createdAt: orderByCreated } : "";
     const updated = orderByUpdated ? { updatedAt: orderByUpdated } : "";
+    const views = orderByViews ? { views: orderByViews } : "";
 
     return this.ranobeService.ranobes({
-      where: { published: false },
+      where: { published: true },
       take: Number(take),
       skip: isNaN(Number(skip)) ? undefined : Number(skip),
-      orderBy: { ...created, ...updated }
+      orderBy: { ...created, ...updated, ...views }
     });
   }
 
@@ -112,8 +114,8 @@ export class RanobeController {
   ) {
     const { title, description, categories } = data;
 
-    const category: { id: string }[] = [];
-    categories.map(id => category.push({ id: id }));
+    const category: { value: string }[] = [];
+    categories.map(value => category.push({ value: value}));
 
     const imagePath = this.fileService.createImage(FileType.IMAGE, image);
 

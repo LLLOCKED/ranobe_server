@@ -9,6 +9,10 @@ export class RanobeService {
   async ranobe(
     ranobeWhereUniqueInput: Prisma.RanobeWhereUniqueInput
   ): Promise<Ranobe | null> {
+    await this.prisma.ranobe.update({
+      where: ranobeWhereUniqueInput,
+      data: { views: { increment: 1 } }
+    })
     return this.prisma.ranobe.findUnique({
       where: ranobeWhereUniqueInput,
       include: {
