@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  Logger,
   Param,
   Post,
   Put,
@@ -15,7 +16,7 @@ import {
 import { RanobeService } from "./ranobe.service";
 import { FileService, FileType } from "src/file/file.service";
 
-import { Prisma, Ranobe as RanobeModel, User } from "@prisma/client";
+import { Prisma, Ranobe as RanobeModel, Category as CategoryModel,  User } from "@prisma/client";
 
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AuthGuard } from "@nestjs/passport";
@@ -36,6 +37,11 @@ export class RanobeController {
   @Get("/:id")
   async getRanobeById(@Param("id") id: string): Promise<RanobeModel | null> {
     return this.ranobeService.ranobe({ id: id });
+  }
+
+  @Get("/categories/list")
+  async getAllCategories(): Promise<{id: string, value: string, name: string}[]> {
+    return this.ranobeService.categories();
   }
 
   @Get("user/:name")
@@ -115,6 +121,8 @@ export class RanobeController {
     const { title, description, categories } = data;
 
     const category: { value: string }[] = [];
+
+    //FIXME: when one category - error  (not array)
     categories.map(value => category.push({ value: value}));
 
     const imagePath = this.fileService.createImage(FileType.IMAGE, image);

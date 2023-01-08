@@ -1,6 +1,6 @@
 import { Injectable, UploadedFile } from "@nestjs/common";
 import { PrismaService } from "../prisma/prisma.service";
-import { Ranobe, Prisma } from "@prisma/client";
+import { Ranobe, Category, Prisma } from "@prisma/client";
 
 @Injectable()
 export class RanobeService {
@@ -90,5 +90,15 @@ export class RanobeService {
     return this.prisma.ranobe.delete({
       where: { id: id },
     });
+  }
+
+  async categories(): Promise<{id: string, value: string, name: string}[]>{
+    return this.prisma.category.findMany({
+      select:{
+        id: true,
+        value: true,
+        name: true
+      }
+    })
   }
 }
